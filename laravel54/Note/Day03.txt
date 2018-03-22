@@ -1,0 +1,223 @@
+﻿一、控制器
+
+1.通过命令行创建控制器
+
+php artisan make:controller name [-r]
+
+提醒:必须保证php.exe所在目录已添加到环境变量;
+
+二、模板
+
+1.概述
+
+A.模板文件以.blade.php为扩展名;
+
+B.模板文件存储在于resources/views目录内;
+
+C.编译后的模板文件存储在storage/framework/views目录内;
+
+D.可通过php artisan view:clear命令清除所有编译后的模板文件;
+
+E.模板文件与目录之间以"."或"/"进行分隔;
+
+2.显示模板文件(通过辅助函数view实现)
+
+Illuminate\View\View view(string $template,$data=[])
+
+2.1)可通过view()函数的第二个参数将数据传递到模板;
+
+2.2)可通过Illuminate\View\View对象的with()方法将数据传递到模板;
+
+2.3)可通过Illuminate\View\View对象的withXXX()的动态方法将数据传递到模板;
+
+3.显示变量
+
+{{$variable}},其原型就是e()函数;而e()函数实质调用htmlspecialchars()系统函数,
+
+将输出变量中的特殊字符都替换成HTML实体,以防止XSS攻击;
+
+未转义数据
+
+{!!$variable!!}
+
+4.流程控制语句
+
+@if(condition)
+ ...
+@endif
+
+@if(condition)
+ ...
+@else
+ ...
+@endif
+
+@if(condition)
+ ...
+@elseif(condition)
+ ...
+@else
+ ... 
+@endif
+
+@for(expr1;expr2;expr3)
+ ...
+@endfor
+
+@foreach($array as $value)
+ ...
+@endforeach
+
+@foreach($array as $key => $value)
+ ...
+@endforeach
+
+@forelse($array as $value)
+ ...
+@empty
+ ...
+@endforelse
+
+@forelse($array as $key => $value)
+ ...
+@empty
+ ...
+@endforelse
+
+5.循环变量
+
+Laravel中循环中内置$loop对象,其属性有:
+
+index,当前循环的索引值(从0开始编号)
+
+iteration,当前循环的迭代(从1开始编号)
+
+count,统计循环的次数
+
+first,返回当前是否为第一次循环
+
+last,返回当前是否为最后一次循环
+
+公共模板
+1\声明,创建一个模板文件,html标签
+views/public/header.blade.php
+
+2\调用,如何调用?
+@include("公共模板的路径")   public.header
+
+公共模板的数据从哪里来?
+控制器方法传,可以.也可以从父类中类.
+
+父类中的方法给公共模板传值
+view()->share(['名'=>值])
+
+
+
+模板布局
+声明一个布局文件,在布局文件中,对页面有多少个块,做了定义.
+
+在子模板中可以继承布局,给块进行传值.
+
+也可以在布局上直接把某个块的内容写死.
+
+1\声明布局,这个布局给后台的模板使用
+
+布局存放在哪里:
+resources/views/layouts/admin.blade.php
+
+@yield('content') 在布局中使用,代表调用子模板中的切片内容
+
+2\后台的模板继承这个布局,给个性化的切片指定内容.
+声明一个内容给相应切片
+继承布局
+@extends('layouts.admin')
+@section('content')
+内容  要传给布局中切片的内容
+@endsection
+app/Http/Controllers/BaseController
+		     function __construct(){
+			$arr=[];
+			view()->share(['arr'=>$arr]);
+		     }	
+			|
+app/Http/Controllers/NewsController
+		 parent::__construct();
+		function lister(){
+			$arr=[];
+
+			return view('news.lister',['arr'=>$arr]);
+		}
+
+
+模板传值 view('',['名'=>值])
+
+模板标签:
+{{$名称}}
+{{$名称['下标']}}
+
+@foreach(变量 as $k=>$v)
+@endforeach
+
+$loop
+
+$loop->index
+$loop->iteration
+$loop->count
+$loop->first
+$loop->last
+
+@if(条件)
+@elaseif(条件)
+....
+@else
+@endif
+
+@include('模板路径')
+
+声明布局
+resources/views/loyouts/admin.blade.php
+
+admin.blade.php  公共内容  @yield('名')
+ 
+
+子模板继承布局,给切片指定内容
+@extends('layouts.admin')
+@section('名')
+内容 html+模板标签
+@endsection
+
+M层,分页
+
+数据验证
+公共类
+
+项目二(上午讲+下午练)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,215 @@
+﻿路由
+Route::get();
+Route::post();
+Route::group(['prefix'=>'admin'],function(){
+	
+});
+路由传值
+传值约束
+
+显示模板:
+view("")
+url("",[])
+
+4\控制器的编写
+1\app/Http/Controllers/XxxController.php
+2\namespace App\Http\Controllers;
+3\继承 use App\Http\Controllers\Controller;
+4\方法名称没有要求,一般一个单词,都小写.
+
+例子:
+使用控制器来呈现后台文章添加的页面.
+url:***/public/admin/news/add
+	|
+	Routes/web.php
+	|Route::get('news/add',"NewsController@add")
+	NewsController
+	function add(){
+		return view('admin.news.add');	
+	}                 |
+	                  |
+			提交
+			 |url:***/public/admin/news/save
+				|
+			Route::get('news/save',"NewsController@save");
+				|
+			NewsController
+			function save(){
+				//接收数据
+				$_POST
+				Rquest
+				//写表 ???
+				//提示,跳转
+			}
+			
+	
+问题:控制器的目录合适吗?
+
+路由,命名空间
+Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
+	Route::get('news/add',"XxxController@xxx");
+})
+
+session:
+
+1\创建对象
+$request->session()
+session()
+
+2\对象使用:
+创建
+session()->put(['名'=>值]);
+session(['名'=>值])
+判断session值是否存在
+session()->has('名')
+使用
+session()->get('名')
+session('名')
+销毁
+session()->flush()
+例子:
+登录
+	呈现登录的表单页面
+	判断用户名密码是否正确
+		正确创建session
+		跳转
+后台首页
+	呈现后台首页,调用session
+退出
+	销毁session
+
+后台访问控制:
+	中间件 middleWare
+
+http://localhost/psd17082/19_laravel/public/admin/news/add
+			|             ***/public/admin/login
+			index.php                      |
+			|                              |
+			web.php 中规则匹配             |
+			|                              |
+		 BaseController@__contruct()没有登录---
+			|
+		    NewsController@add
+中间件类声明,使用?
+
+创建中间件,规则
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class CheckAge
+{
+    /**
+     * 返回请求过滤器
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if ($request->input('age') <= 200) {
+            return redirect('home');
+        }
+
+        return $next($request);
+    }
+
+}
+
+注册中间件,告诉laravel,我封装一个中间件,它叫什么
+app/Http/Kernel.php
+protected $routeMiddleware = [
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'check' => \App\Http\Middleware\CheckLogin::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    ]
+
+
+调用,在控制器类中构造方法中
+function __construct(){
+	$this->middleWare('check');
+}
+
+
+例子:文章添加,提示跳转,列表页
+1\呈现文章添加的表单
+***/public/admin/news/add
+Route::get("news/add","NewsController@add");
+封装控制器,方法,调用模板
+2\保存数据,提示跳转---->列表页上跳
+
+3\文章管理页
+***/public/admin/news/oper
+
+Route::get("news/oper","NewsController@oper")
+
+
+setTimeout()
+setInterval()
+
+5分钟之后拧你一下
+每过5分钟拧你一下
+	
+提示跳转:
+
+
+跳转: redirect('路由')
+redirect()->back() 返回到上一级.
+提示:redirect('路由')->with('提示语名称',"提示语")
+在模板上显示提示语:
+{{session()->get('提示语名称')}}
+
+分类模块:
+添加
+指定url地址
+***/public/admin/type/add
+指定路由
+Route::get('type/add',"TypeController@add");
+模板
+resources/views/admin/type/add.blade.php
+
+
+管理
+修改
+删除
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+5\v层
+6\数据模型类
+7\公共类
+
+application
+	home
+	admin
+	common
+		model
+			数据模型类
+
+
+
+	
+
+
+	

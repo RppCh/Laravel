@@ -1,0 +1,149 @@
+﻿电话:17701268205
+composer:第三方软件(程序包)的管理工具.
+vendor 第三方
+	
+MVC:软件设计模式.
+
+规定:
+1\整个软件分为三层
+M层:
+	有一些程序M,干了什么?
+	操作数据库,数据处理
+V层
+	有一些程序V,干了什么?
+	呈现页面效果,模板,html
+C层
+	有一些程序C
+	控制器,类,能够响应url地址请求,调用,M C
+2\规定目录结构
+	app/Http/Controllers/XxxController.php 控制器
+	app/Xxx.php 数据模型类
+	resources/views/xxx.blade.php 模板
+	routes/web.php 路由
+	config
+		配置文件
+3\规定命名
+
+Laravel 手册
+1\安装
+php打开openssl
+
+可将libeay32.dll和ssleay32.dll文件复制并替换到apache\bin目录下
+
+2\目录结构,命名规范
+
+3\路由:指定url地址名称对应一个控制器方法或一个匿名函数.
+	url
+	|
+	route/web.php 找匹配的路由规则
+		|
+		C  匿名函数 view()--->V
+		|
+	------------------------
+	M                     V
+1\代码写在route/web.php中
+写法:
+Route::get("名称","匿名函数|XxxController@function");
+
+view("模板路径")
+例子:view('dirname.dirname.welcome')
+
+例子:
+呈现一个文章列表页面 resources/views/news/lister.blade.php
+
+view("news.lister")
+
+2\路由传参
+Route::get('名/{参数名}',"匿名函数|XxxController@function");	
+
+3\传参值的约束
+Route::get('名/{参数名}',"匿名函数|XxxController@function")
+	->where(['被约束的参数'=>'正则',....]);
+4\可选参数
+Route::get('名/{参数名?}',"匿名函数|XxxController@function");
+说明:接收时应该加上默认值
+
+5\post方法
+例子:文章详细页,加上评论.
+Route::post("comment/save",function(){
+	var_dump($_POST);
+	return "保存成功";
+})
+
+跨站攻击:
+	a站给b站的程序发送数据,从而执行b站的程序.
+令牌验证:
+	{{ csrf_field() }}
+后台:
+	文章添加
+	呈现表单页面 
+	Route::get("admin/news/add",function(){
+		return view('admin.news.add');
+	});
+	保存:
+	Route::post("admin/news/save",function(){
+		return '发布成功';
+	});
+	文章列表页
+	Route::get("admin/news/oper",function(){
+		return view('admin.news.oper');
+	});
+	修改
+	Route::get("admin/news/update/{id}",function(){
+		return view('admin.news.oper');
+	})->where(['id'=>'\d+']);
+	保存修改表单数据
+	Route::post("admin/news/usave",function(){
+		return '修改成功';
+	});
+	删除
+	Route::get("admin/news/delete/{id}",function(){
+		return 'ok';
+	})->where(['id'=>'\d+']);
+	
+	呈现产品添加的表单
+	Route::get("admin/product/add",function(){
+		return view("admin.product.add");
+	})
+
+路由分组:
+	路由前缀
+	Route::group(['prefix'=>'admin'],function(){
+		Route::get();
+		Route::post();
+	}	
+	);
+
+后台的文章模块写完
+	登录
+	后台首页
+	文添加
+	文章列表
+	
+函数:
+url('路由的名称',['参数名'=>值])
+	
+
+
+
+
+session工作原理:
+当我们session_start时,服务上自动产生一个session文件即一个sessionid,
+sessionid回传给客户端,保存在cookie中,下次客户端发送请求,带上sessionid,
+服务器根据sessionid,找session文件,获取值.
+
+	
+
+
+
+	4\控制器的编写
+	5\v层
+	6\数据模型类
+	7\公共类
+
+
+
+	
+
+
+	
